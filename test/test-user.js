@@ -208,7 +208,7 @@ describe('User endpoints', function() {
         });
 
         describe('PUT', function() {
-            it.only('should allow editing a user', function() {
+            it('should allow editing a user', function() {
                 var oldUser = {
                     username: 'joe'
                 };

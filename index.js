@@ -67,7 +67,7 @@ app.post('/users', jsonParser, function (req, res) {
         res.location('/users/' + user._id).status(201).json({})
         .catch(function(err) {
             console.log(err); 
-            res.status(500).send({
+            return res.status(500).send({
               message: 'Internal Server Error'
             })
         }) 
@@ -76,18 +76,38 @@ app.post('/users', jsonParser, function (req, res) {
 
 
 app.put('/users/:id', jsonParser, function (req,res) {
-    console.log(req.params.id); console.log(req.body);
-    User.findOneAndUpdate({_id: req.params.id}, {username: req.body.username}, function(err, item) {
-        console.log( "err", err);
-        console.log("item", item);
+    User.findOneAndUpdate({_id: req.params.id}, {username: req.body.username}, function(err, dbitem) {
         if (err) {
           return res.status(400).json({
             message: 'Internal Server Error'
           });
         }
-        res.status(200).json({});
+        else if (dbitem === null) {
+           var user = new User({username: req.body.username, _id: req.body._id});
+                user.save().then(function(user) {
+                return res.location('/users/' + user._id).status(200).json({})
+                }).catch(function(err) {
+                    console.log(err); 
+                    return res.status(500).send({
+                        message: 'Internal Server Error'
+                    })
+                }) 
+            }
+        else {
+            return res.status(200).json({});
+        }
     }); 
 })
+
+// app.put('/users/:id', jsonParser, function (req, res) {
+//     console.log(req.params._id);
+//     User.findById(req.params.id, function (err, dbitem) {
+//         console.log("HEY")
+//         if (dbitem === null) {
+     
+//         }
+//     })
+// })
 //     User.create({username: req.body.username}, function(err, dbitem) {
 //         if (err) {
 //             console.log(err)
