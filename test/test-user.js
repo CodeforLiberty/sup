@@ -98,7 +98,7 @@ describe('User endpoints', function() {
                         res.username.should.equal(user.username);
                     });
             });
-            xit('should reject users without a username', function() {
+            it('should reject users without a username', function() {
                 var user = {};
                 var spy = makeSpy();
                 // Add a user without a username

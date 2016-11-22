@@ -26,18 +26,34 @@ app.get('/users', function (req, res) {
 });
 
 app.post('/users', jsonParser, function (req, res) {
-    User.create({
-        username: req.body.name
-    }, function(err, dbitem) {
-        if (err) {
-            console.log(err)
-             return res.status(500).json({
-                message: 'Internal Server Error'
-            });
-        }
-        res.status(201).json(dbitem);
-    });
-});
+    if (!req.body)  {
+        return res.status(400).json({
+            message: 'No request body'
+        })
+    }
+
+    var user = new User({username: req.body.username});
+
+    user.save().then(function(user) {
+        res.location('/users/' + user._id).status(201).json({})
+        .catch(function(err) {
+            console.log(err); 
+            res.status(500).send({
+              message: 'Internal Server Error'
+            })
+        }) 
+    })
+})
+//     User.create({username: req.body.username}, function(err, dbitem) {
+//         if (err) {
+//             console.log(err)
+//              return res.status(500).json({
+//                 message: 'Internal Server Error'
+//             });
+//         }
+//         res.status(201).json(dbitem);
+//     });
+// });
 
 // app.post('/items', function(req, res) {
 //     Item.create({

@@ -89,7 +89,7 @@ An empty object.
 Endpoint representing a single user of Sup.
 
 ```
-GET /users/:userId
+GET /users/a
 ```
 
 Get a single user of Sup.
