@@ -1,4 +1,5 @@
-global.databaseUri = 'mongodb://dev:dev@ds161497.mlab.com:61497/sup-app';
+global.databaseUri = 'mongodb://user:user@ds161487.mlab.com:61487/sup-app';
+
 
 var chai = require('chai');
 var chaiHttp = require('chai-http');
@@ -335,7 +336,7 @@ describe('User endpoints', function() {
             });
         });
 
-        xdescribe('DELETE', function() {
+        describe('DELETE', function() {
             it('should 404 on non-existent users', function() {
                 var spy = makeSpy();
                 // Try to delete a non-existent user

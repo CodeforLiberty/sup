@@ -1,4 +1,4 @@
-global.databaseUri = 'mongodb://dev:dev@ds161497.mlab.com:61497/sup-app';
+global.databaseUri = 'mongodb://user:user@ds161487.mlab.com:61487/sup-app';
 
 var chai = require('chai');
 var chaiHttp = require('chai-http');
