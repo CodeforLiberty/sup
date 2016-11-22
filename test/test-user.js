@@ -122,7 +122,7 @@ describe('User endpoints', function() {
                         spy.called.should.be.false;
                     });
             });
-            xit('should reject non-string usernames', function() {
+            it('should reject non-string usernames', function() {
                 var user = {
                     username: 42
                 };
@@ -151,7 +151,7 @@ describe('User endpoints', function() {
         });
     });
 
-    xdescribe('/users/:userId', function() {
+    describe('/users/:userId', function() {
         describe('GET', function() {
             it('should 404 on non-existent users', function() {
                 var spy = makeSpy();
@@ -207,8 +207,8 @@ describe('User endpoints', function() {
             });
         });
 
-        xdescribe('PUT', function() {
-            it('should allow editing a user', function() {
+        describe('PUT', function() {
+            it.only('should allow editing a user', function() {
                 var oldUser = {
                     username: 'joe'
                 };

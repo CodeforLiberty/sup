@@ -25,13 +25,42 @@ app.get('/users', function (req, res) {
     });
 });
 
+app.get('/users/:id', function (req,res) {
+    console.log(req.params.id)
+
+    User.findById(req.params.id, function(err, dbitem) {
+        console.log("hi");
+        console.log(dbitem);
+        if(dbitem===null) {
+            console.log(err);
+            return res.status(404).json({message:'User not found'})
+        }
+         console.log(dbitem);
+         res.json(dbitem);
+    })
+
+
+})
+
+
+
+
 app.post('/users', jsonParser, function (req, res) {
     if (!req.body)  {
         return res.status(400).json({
             message: 'No request body'
         })
     }
-
+    if(!req.body.username) { 
+        return res.status(422).json({
+            message: 'Missing field: username'
+        })
+    }
+    if(typeof req.body.username!='string') {
+        return res.status(422).json({
+            message: 'Incorrect field type: username'
+        })
+    }
     var user = new User({username: req.body.username});
 
     user.save().then(function(user) {
@@ -43,6 +72,21 @@ app.post('/users', jsonParser, function (req, res) {
             })
         }) 
     })
+})
+
+
+app.put('/users/:id', jsonParser, function (req,res) {
+    console.log(req.params.id); console.log(req.body);
+    User.findOneAndUpdate({_id: req.params.id}, {username: req.body.username}, function(err, item) {
+        console.log( "err", err);
+        console.log("item", item);
+        if (err) {
+          return res.status(400).json({
+            message: 'Internal Server Error'
+          });
+        }
+        res.status(200).json({});
+    }); 
 })
 //     User.create({username: req.body.username}, function(err, dbitem) {
 //         if (err) {
