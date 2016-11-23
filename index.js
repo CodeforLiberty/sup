@@ -21,22 +21,21 @@ app.get('/users', function (req, res) {
                 message: 'Internal Server Error'
             });
         }
-        res.json(dbitems);
+        return res.json(dbitems);
     });
 });
 
 app.get('/users/:id', function (req,res) {
-    console.log(req.params.id)
+    
 
     User.findById(req.params.id, function(err, dbitem) {
-        console.log("hi");
-        console.log(dbitem);
+        
         if(dbitem===null) {
-            console.log(err);
+        
             return res.status(404).json({message:'User not found'})
         }
-         console.log(dbitem);
-         res.json(dbitem);
+         
+        return res.json(dbitem);
     })
 
 
@@ -61,12 +60,13 @@ app.post('/users', jsonParser, function (req, res) {
             message: 'Incorrect field type: username'
         })
     }
+
     var user = new User({username: req.body.username});
 
     user.save().then(function(user) {
         res.location('/users/' + user._id).status(201).json({})
         .catch(function(err) {
-            console.log(err); 
+             
             return res.status(500).send({
               message: 'Internal Server Error'
             })
@@ -76,6 +76,16 @@ app.post('/users', jsonParser, function (req, res) {
 
 
 app.put('/users/:id', jsonParser, function (req,res) {
+    if(!req.body.username) { 
+        return res.status(422).json({
+            message: 'Missing field: username'
+        })
+    }
+    if(typeof req.body.username!='string') {
+        return res.status(422).json({
+            message: 'Incorrect field type: username'
+        })
+    }
     User.findOneAndUpdate({_id: req.params.id}, {username: req.body.username}, function(err, dbitem) {
         if (err) {
           return res.status(400).json({
@@ -87,7 +97,7 @@ app.put('/users/:id', jsonParser, function (req,res) {
                 user.save().then(function(user) {
                 return res.location('/users/' + user._id).status(200).json({})
                 }).catch(function(err) {
-                    console.log(err); 
+                     
                     return res.status(500).send({
                         message: 'Internal Server Error'
                     })
@@ -97,6 +107,17 @@ app.put('/users/:id', jsonParser, function (req,res) {
             return res.status(200).json({});
         }
     }); 
+})
+
+app.delete('/users/:id', jsonParser, function (req,res) {
+User.findOneAndRemove({_id:req.params.id},function(err,user){
+    if(!user) {
+       return res.status(404).json({message:'User not found'});
+    }
+    return res.status(200).json({});
+
+})
+    
 })
 
 // app.put('/users/:id', jsonParser, function (req, res) {
