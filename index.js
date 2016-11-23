@@ -119,8 +119,8 @@ User.findOneAndRemove({_id:req.params.id},function(err,user){
 })
 
 app.get('/messages', jsonParser, function (req, res){
-    console.log(req.query.from, req.query.to);
-    if(req.query.from===true && req.query.to===true) {
+    
+    if(req.query.from!==undefined && req.query.to!==undefined) {
         Messages.find({from:req.query.from,to:req.query.to})
         .populate('from') 
         .populate('to')
@@ -129,7 +129,7 @@ app.get('/messages', jsonParser, function (req, res){
         res.status(200).json(messages);
         
     });
-    } else if( req.query.to) {
+    } else if( req.query.to!==undefined) {
         Messages.find({to:req.query.to})
         .populate('from')
         .populate('to')
@@ -138,12 +138,12 @@ app.get('/messages', jsonParser, function (req, res){
         res.status(200).json(messages);
         
     });
-    } else if(req.query.from) {
+    } else if(req.query.from!==undefined) {
         Messages.find({from:req.query.from})
         .populate('from')
         .populate('to')
         .then(function(messages) {
-       
+       console.log(messages)
         res.status(200).json(messages);
         
     });
@@ -159,6 +159,27 @@ app.get('/messages', jsonParser, function (req, res){
    
     
 })
+
+
+app.post('/messages', jsonParser, function (req, res){
+    console.log("haaalllllllp", req.body.text);
+    if (!req.body.text){
+        return res.status(422).json({message: 'Missing field: text'})
+    }
+    // if (typeof req.body.text !== 'string'){
+    // }
+    var message = new Messages(req.body);
+    console.log("messsssssssage:", message);
+    message.save().then(function(user) {
+        res.location('/messages/' + message._id).status(201).json({})
+        .catch(function(err) {
+             
+            return res.status(422).send({
+              message: 'Internal Server Error'
+            })
+        }) 
+     })   
+})    
 
     
 // app.get('/messages', jsonParser, function (req, res){

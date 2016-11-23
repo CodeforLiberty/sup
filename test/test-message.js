@@ -320,6 +320,7 @@ describe('Message endpoints', function() {
                         .get(url);
                 }.bind(this))
                 .then(function(res) {
+                    
                     // Check that the correct messages are in the array
                     res.should.have.status(200);
                     res.type.should.equal('application/json');
