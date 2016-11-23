@@ -15,7 +15,7 @@ var should = chai.should();
 
 chai.use(chaiHttp);
 
-xdescribe('Message endpoints', function() {
+describe('Message endpoints', function() {
     var server;
     beforeEach(function(done) {
         this.listPattern = new UrlPattern('/messages');
@@ -48,7 +48,7 @@ xdescribe('Message endpoints', function() {
         }.bind(this));
     });
 
-    xdescribe('/messages', function() {
+    describe('/messages', function() {
         describe('GET', function() {
             it('should return an empty list of messages initially', function() {
                 // Get the list of messages
@@ -64,7 +64,7 @@ xdescribe('Message endpoints', function() {
                     });
             });
 
-            it('should return a list of messages', function() {
+            it.only('should return a list of messages', function() {
                 var messageA = {
                     from: this.alice._id,
                     to: this.bob._id,

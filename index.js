@@ -3,7 +3,7 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 
 var User = require('./models/user');
-
+var Messages = require('./models/message')
 
 var app = express();
 
@@ -37,7 +37,6 @@ app.get('/users/:id', function (req,res) {
          
         return res.json(dbitem);
     })
-
 
 })
 
@@ -116,9 +115,42 @@ User.findOneAndRemove({_id:req.params.id},function(err,user){
     }
     return res.status(200).json({});
 
+    })   
 })
-    
+
+app.get('/messages', jsonParser, function (req, res){
+    Messages.find(function(err, item){
+      if (err){
+        return res.send(404).json({message: 'can not find messages'});
+      }  
+      //console.log(item);
+
+      res.status(200).json(item);
+    })
 })
+
+app.get('/messages/:currentMessage', jsonParser, function (req, res){
+    console.log(req.params.currentMessage.text);
+    Messages.find(req.params.text, function (err, item){
+       //  console.log(item);
+       //  console.log(item[0].from)
+       // console.log(item[0].text);
+       //console.log(req.body.text);
+        if (err){
+            return console.log(err);
+        }
+        res.send(200).json(item)
+    })
+    //console.log(req.body.text);
+    //console.log(req.body.from);
+    //add item to database so that the array is populated with multiple messages
+    // each item in array should have proprty {text: res.body.message.text, username: res.body.username, to: res.body.to }
+
+
+})
+
+
+
 
 // app.put('/users/:id', jsonParser, function (req, res) {
 //     console.log(req.params._id);
