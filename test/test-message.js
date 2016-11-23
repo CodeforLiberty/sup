@@ -302,7 +302,8 @@ describe('Message endpoints', function() {
 
                 // Create three messages
                 var messageA = new Message(messageA);
-                var messageB = new Message(messageB);
+                var messageB = new Message(messageB
+                    );
                 var messageC = new Message(messageC);
 
                 // Save them to the database
@@ -342,7 +343,7 @@ describe('Message endpoints', function() {
                 }.bind(this));
             });
         });
-        xdescribe('POST', function() {
+        describe('POST', function() {
             it('should allow adding a message', function() {
                 var message = {
                     from: this.alice._id,

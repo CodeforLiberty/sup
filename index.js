@@ -119,32 +119,33 @@ User.findOneAndRemove({_id:req.params.id},function(err,user){
 })
 
 app.get('/messages', jsonParser, function (req, res){
-    console.log(req.query.from, req.query.to);
-    if(req.query.from===true && req.query.to===true) {
-        Messages.find({from:req.query.from,to:req.query.to})
+    // console.log(req.query.from.length, req.query.to);
+    if(req.query.from.length >0 && req.query.to.length>0) {
+        // console.log(req.query.from.length);
+        Messages.find({from:req.query.from, to: req.query.to})
         .populate('from') 
         .populate('to')
         .then(function(messages) {
-        
-        res.status(200).json(messages);
-        
-    });
-    } else if( req.query.to) {
+        console.log("lengthhhhhhhhhhh", messages);
+        return res.status(200).json(messages);
+        // req.query.from===true && req.query.to===true
+      })
+    } else if( req.query.to !== undefined) {
         Messages.find({to:req.query.to})
         .populate('from')
         .populate('to')
         .then(function(messages) {
        
-        res.status(200).json(messages);
+        return res.status(200).json(messages);
         
     });
-    } else if(req.query.from) {
+    } else if(req.query.from !== undefined) {
         Messages.find({from:req.query.from})
         .populate('from')
         .populate('to')
         .then(function(messages) {
        
-        res.status(200).json(messages);
+        return res.status(200).json(messages);
         
     });
     }
@@ -152,7 +153,7 @@ app.get('/messages', jsonParser, function (req, res){
     .populate('from')
     .populate('to')
     .then(function(messages) {
-
+        console.log(messages)
         res.status(200).json(messages);
         
     });
@@ -160,116 +161,31 @@ app.get('/messages', jsonParser, function (req, res){
     
 })
 
-    
-// app.get('/messages', jsonParser, function (req, res){
-//     Messages.find().populate('from').populate('to')
+app.post('/messages', jsonParser, function (req, res){
+    console.log("haaalllllllp", req.body.text);
+    if (!req.body.text){
+        return res.status(422).json({message: 'Missing field: text'})
+    }
 
-//         .then( function (err, item) {
-//        //  console.log(item);
-//        //  console.log(item[0].from)
-//        // console.log(item[0].text);
-//        //console.log(req.body.text);
-//         if (err){
-//             return console.log(err);
-//         }
-//         res.send(200).json(Messages)
-//         .done();
-//     })
+    // if (typeof req.body.text !== 'string'){
 
-//     })
-    //console.log(req.body.text);
-    //console.log(req.body.from);
-    //add item to database so that the array is populated with multiple messages
-    // each item in array should have proprty {text: res.body.message.text, username: res.body.username, to: res.body.to }
+    // }
 
-
-
+    var message = new Messages(req.body);
+    console.log("messsssssssage:", message);
+    message.save().then(function(user) {
+        res.location('/messages/' + message._id).status(201).json({})
+        .catch(function(err) {
+             
+            return res.status(422).send({
+              message: 'Internal Server Error'
+            })
+        }) 
+     })   
+})    
 
 
 
-
-// app.put('/users/:id', jsonParser, function (req, res) {
-//     console.log(req.params._id);
-//     User.findById(req.params.id, function (err, dbitem) {
-//         console.log("HEY")
-//         if (dbitem === null) {
-     
-//         }
-//     })
-// })
-//     User.create({username: req.body.username}, function(err, dbitem) {
-//         if (err) {
-//             console.log(err)
-//              return res.status(500).json({
-//                 message: 'Internal Server Error'
-//             });
-//         }
-//         res.status(201).json(dbitem);
-//     });
-// });
-
-// app.post('/items', function(req, res) {
-//     Item.create({
-//         name: req.body.name
-//     }, function(err, item) {
-//         if (err) {
-//             return res.status(500).json({
-//                 message: 'Internal Server Error'
-//             });
-//         }
-//         res.status(201).json(item);
-//     }); 
-// });
-
-
-
-//.get, .post, .pull, delete
-    // load in parsers
-    //made need to look back at mongoose or express documentation in order to lead you in the right direction
-
-//post Model.save (create a new object and save it to the database)
-//import or require in the user object
-
-// app.post ('/something', function (req, res) {
-//   //create a new instance of a Mongoose model and save it to Mongo
-//   //  
-// })
-//USERS endpoints
-
-    //GET - read
-        // Get an array of all users of Sup.
-            // /users
-        // Get a single user
-            // /users/:userId
-
-    //PUT - update
-        //Add or edit a Sup user.
-            // /users/:userId
-
-    //POST - create
-        //// Add a user to Sup
-            // /users/:userId
-
-    //DELETE - delete
-        //Delete a sup user
-            ///users/:userId
-
-//MESSAGES endpoints
-
-    // GET
-        //Endpoint representing all the messages in sup, returns an array
-            // /messages
-        //Get a singular message
-            // /messages/:messageId
-
-    //PUT
-        
-
-    //POST
-        //Adds a message
-            // /messages
-
-    //DELETE
 
 
 
