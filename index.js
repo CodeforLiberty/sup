@@ -119,35 +119,71 @@ User.findOneAndRemove({_id:req.params.id},function(err,user){
 })
 
 app.get('/messages', jsonParser, function (req, res){
-    Messages.find(function(err, item){
-      if (err){
-        return res.send(404).json({message: 'can not find messages'});
-      }  
-      //console.log(item);
+    console.log(req.query.from, req.query.to);
+    if(req.query.from===true && req.query.to===true) {
+        Messages.find({from:req.query.from,to:req.query.to})
+        .populate('from') 
+        .populate('to')
+        .then(function(messages) {
+        
+        res.status(200).json(messages);
+        
+    });
+    } else if( req.query.to) {
+        Messages.find({to:req.query.to})
+        .populate('from')
+        .populate('to')
+        .then(function(messages) {
+       
+        res.status(200).json(messages);
+        
+    });
+    } else if(req.query.from) {
+        Messages.find({from:req.query.from})
+        .populate('from')
+        .populate('to')
+        .then(function(messages) {
+       
+        res.status(200).json(messages);
+        
+    });
+    }
+     Messages.find()
+    .populate('from')
+    .populate('to')
+    .then(function(messages) {
 
-      res.status(200).json(item);
-    })
+        res.status(200).json(messages);
+        
+    });
+   
+    
 })
 
-app.get('/messages/:currentMessage', jsonParser, function (req, res){
-    console.log(req.params.currentMessage.text);
-    Messages.find(req.params.text, function (err, item){
-       //  console.log(item);
-       //  console.log(item[0].from)
-       // console.log(item[0].text);
-       //console.log(req.body.text);
-        if (err){
-            return console.log(err);
-        }
-        res.send(200).json(item)
-    })
+    
+// app.get('/messages', jsonParser, function (req, res){
+//     Messages.find().populate('from').populate('to')
+
+//         .then( function (err, item) {
+//        //  console.log(item);
+//        //  console.log(item[0].from)
+//        // console.log(item[0].text);
+//        //console.log(req.body.text);
+//         if (err){
+//             return console.log(err);
+//         }
+//         res.send(200).json(Messages)
+//         .done();
+//     })
+
+//     })
     //console.log(req.body.text);
     //console.log(req.body.from);
     //add item to database so that the array is populated with multiple messages
     // each item in array should have proprty {text: res.body.message.text, username: res.body.username, to: res.body.to }
 
 
-})
+
 
 
 

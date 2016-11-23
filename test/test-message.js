@@ -49,7 +49,7 @@ describe('Message endpoints', function() {
     });
 
     describe('/messages', function() {
-        describe('GET', function() {
+        describe.only('GET', function() {
             it('should return an empty list of messages initially', function() {
                 // Get the list of messages
                 return chai.request(app)
@@ -64,7 +64,7 @@ describe('Message endpoints', function() {
                     });
             });
 
-            it.only('should return a list of messages', function() {
+            it('should return a list of messages', function() {
                 var messageA = {
                     from: this.alice._id,
                     to: this.bob._id,
