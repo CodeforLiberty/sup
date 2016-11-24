@@ -49,7 +49,7 @@ describe('Message endpoints', function() {
     });
 
     describe('/messages', function() {
-        describe.only('GET', function() {
+        describe('GET', function() {
             it('should return an empty list of messages initially', function() {
                 // Get the list of messages
                 return chai.request(app)
@@ -550,7 +550,7 @@ describe('Message endpoints', function() {
         });
     });
 
-    xdescribe('/messages/:messageId', function() {
+    describe.only('/messages/:messageId', function() {
         describe('GET', function() {
             it('should 404 on non-existent messages', function() {
                 var spy = makeSpy();
