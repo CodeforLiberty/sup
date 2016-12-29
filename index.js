@@ -160,7 +160,7 @@ app.post('/messages', jsonParser, function (req, res){
       });
 
       return Promise.all([findFrom, findTo]).then(function(results){
-        console.log(results);
+        // console.log(results);
         if (!results[0]){
             return res.status(422).json({message: 'Incorrect field value: from'})
             
@@ -178,12 +178,25 @@ app.post('/messages', jsonParser, function (req, res){
          });
  });
 
-app.post('/messages/:messageId', jsonParser, function(req, res){
+app.get('/messages/:messageId', function(req, res){
 
+    Messages.findById(req.params.messageId, function(err, dbitem) {
+        // console.log(dbitem)
+        if(dbitem === null) {
+            return res.status(404).json({message:'Message not found'})
+        }
+        return dbitem;
+        })
+        .populate('from to')
+        .then(function(dbitem) {
+            res.json(dbitem);
+        });
+
+    
 })
 
 var runServer = function(callback) {
-    var databaseUri = process.env.DATABASE_URI || global.databaseUri || 'mongodb://dev:dev@ds161497.mlab.com:61497/sup-app';
+    var databaseUri = process.env.DATABASE_URI || global.databaseUri || 'mongodb://chat:chat@ds159217.mlab.com:59217/chat';
     mongoose.connect(databaseUri).then(function() {
         console.log('connected');
         var port = process.env.PORT || 8080;

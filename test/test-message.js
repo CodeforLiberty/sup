@@ -550,7 +550,7 @@ describe('Message endpoints', function() {
         });
     });
 
-    describe.only('/messages/:messageId', function() {
+    describe('/messages/:messageId', function() {
         describe('GET', function() {
             it('should 404 on non-existent messages', function() {
                 var spy = makeSpy();

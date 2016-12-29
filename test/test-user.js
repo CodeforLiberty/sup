@@ -1,4 +1,4 @@
-/*
+
 global.databaseUri = 'mongodb://dev:dev@ds161497.mlab.com:61497/sup-app';
 
 var chai = require('chai');
@@ -394,4 +394,3 @@ describe('User endpoints', function() {
     });
 });
 
-*/ 
